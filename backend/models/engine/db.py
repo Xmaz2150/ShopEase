@@ -38,11 +38,8 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
 
-<<<<<<< HEAD
-    def all(self, cls=None, category=None, cart_id=None):
-=======
+
     def all(self, cls=None, category=None, **kwargs):
->>>>>>> b3c69bca5c59c6b9336449ca495b4708c3f79329
         """Query all objects of a certain class or all classes"""
         category_id = None
         if category:
@@ -52,14 +49,11 @@ class DBStorage:
             if len(category_id) > 0:
                 category_id = category_id[0]
 
-<<<<<<< HEAD
-=======
         if kwargs:
-            key = list(kwargs.items())[0][0]
+            o_key = list(kwargs.items())[0][0]
         else:
-            key = None
+            o_key = None
 
->>>>>>> b3c69bca5c59c6b9336449ca495b4708c3f79329
         new_dict = {}
         for clss in classes:
             if cls is None or cls is classes[clss] or cls is clss:
@@ -70,19 +64,14 @@ class DBStorage:
                         if hasattr(obj, 'category_id'):
                             if obj.category_id == category_id:
                                 new_dict[key] = obj
-<<<<<<< HEAD
-                    elif cart_id:
+
+                    elif o_key == 'cart_id':
                         if hasattr(obj, 'cart_id'):
-                            if obj.cart_id == cart_id:
-=======
-                    elif key == 'cart_id':
-                        if hasattr(obj, 'cart_id'):
-                            if obj.cart_id == 'cart_id':
+                            if obj.cart_id == kwargs.get(o_key):
                                 new_dict[key] = obj
-                    elif key == 'user_id':
+                    elif o_key == 'user_id':
                         if hasattr(obj, 'user_id'):
-                            if obj.user_id == 'cart_id':
->>>>>>> b3c69bca5c59c6b9336449ca495b4708c3f79329
+                            if obj.user_id == kwargs.get(o_key):
                                 new_dict[key] = obj
                     else:
                         new_dict[key] = obj

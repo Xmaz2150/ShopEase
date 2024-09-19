@@ -11,17 +11,12 @@ class Config:
         'DATABASE_URL') or 'postgresql+psycopg2://{}:{}@{}/{}'.format(
             SEASE_PGSQL_USER, SEASE_PGSQL_PWD, SEASE_PGSQL_HOST, SEASE_PGSQL_DB
     )
-<<<<<<< HEAD
-=======
-    IS_SU = getenv('IS_SU') or None
->>>>>>> b3c69bca5c59c6b9336449ca495b4708c3f79329
+
+    IS_SU = getenv('IS_SU') or 'user'
     SECRET_KEY = getenv('SECRET_KEY', 'supersecretkey')
     JWT_SECRET_KEY = getenv('JWT_SECRET_KEY', 'supersecretjwtkey')
 
     UPLOAD_FOLDER = getenv('UPLOAD_PATH') or 'static/uploads/images'
-<<<<<<< HEAD
-    IMG_URL_PREFIX = 'http://localhost:5000/SE/img/'
-=======
+
     IMG_URL_PREFIX = '/SE/img/'
->>>>>>> b3c69bca5c59c6b9336449ca495b4708c3f79329
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}

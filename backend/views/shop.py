@@ -1,18 +1,11 @@
 from typing import cast
-<<<<<<< HEAD
-from flask import jsonify, request
-from models import storage
-from utils.file import upload_file, rename_file
-from config.settings import Config
-from models.models import BaseModel, Product, Category, Cart, CartItem
-=======
+
 from flask import jsonify, request, redirect, url_for
 from models import storage
 from utils.file import upload_file, rename_file
 from config.settings import Config
 from datetime import datetime
 from models.models import BaseModel, Product, Category, Cart, CartItem, Order, OrderItem
->>>>>>> b3c69bca5c59c6b9336449ca495b4708c3f79329
 from views import shop_views
 from flask_jwt_extended import jwt_required, get_jwt, current_user
 from views.helpers import role_required
@@ -67,13 +60,17 @@ def upload_product():
         or not category:
         return jsonify({"message": "Invalid data!"}), 400
 
+    if category not in PRODUCT_CATEGORIES:
+        return jsonify({"message": "Invalid category!"}), 400
+
+    p_category = [c for key, c in storage.all(Category).items() if c.name == category][0]
     new_product = Product(
         name = name,
         description=description,
         price=float(price),
         brand=brand,
         stock_quantity=int(stock_quantity),
-        category_id=storage.get(Category, name=category).id
+        category_id=p_category.id
     )
 
     image_name = upload_file(file)
@@ -87,19 +84,12 @@ def upload_product():
     rename_file(image_name, '{}.{}'.format(new_product.id, image_name))
     product_update.save()
 
-<<<<<<< HEAD
-    return jsonify({'Successfully created PRODUCT': {
-        'id': new_product.id,
-        'name': new_product.name,
-        'image_url': product_update.image_url
-    }}), 201
-=======
+
     return jsonify({
         'id': new_product.id,
         'name': new_product.name,
         'image_url': product_update.image_url
     }), 201
->>>>>>> b3c69bca5c59c6b9336449ca495b4708c3f79329
 
 
 @shop_views.route('/cart', methods=['GET'])
@@ -108,19 +98,10 @@ def get_cart():
     ''' Gets all items in cart for specific user '''
     cart = storage.get(Cart, user_id=current_user.id)
     if not cart:
-<<<<<<< HEAD
-        return jsonify({"message": "Cart does not exist!"}), 404
-    
-    cart_items = storage.all(CartItem, None, cart.id)
-    cart_items = [p.to_dict() for key, p in storage.all(CartItem, None, cart.id).items()]
-=======
         return jsonify({"message": "Error loading cart!"}), 404
     
-    cart_items = storage.all(CartItem, None, cart_id=cart.id)
     cart_items = [p.to_dict() for key, p in storage.all(CartItem, None, cart_id=cart.id).items()]
->>>>>>> b3c69bca5c59c6b9336449ca495b4708c3f79329
-    print(len(cart_items))
-    
+    print(cart_items)
     return jsonify({'Cart': cart_items})
 
 @shop_views.route('/cart/add', methods=['POST'])
@@ -158,16 +139,6 @@ def add_to_cart():
             price=product.price
         )
         new_item.save()
-<<<<<<< HEAD
-    
-    if hasattr(cart_item, 'quantity'):
-        cart_item.quantity += quantity
-
-    print('----', isinstance(cart_item, CartItem), '-----')
-    cart_item.save()
-    
-    return jsonify({'New PRODUCT added to cart': cart_item.to_dict()}), 201
-=======
         return jsonify(new_item.to_dict()), 201
     
     if hasattr(cart_item, 'quantity') and hasattr(cart_item, 'save') \
@@ -177,7 +148,6 @@ def add_to_cart():
         return jsonify(cart_item.to_dict()), 201
     
     return jsonify({"message": "Could not add item to cart!"}), 400
->>>>>>> b3c69bca5c59c6b9336449ca495b4708c3f79329
 
 @shop_views.route('/cart/remove', methods=['POST'])
 @jwt_required()
@@ -221,11 +191,7 @@ def remove_from_cart():
         cart_item.quantity -= quantity
 
     cart_item.save()
-    
-    
-<<<<<<< HEAD
-    return jsonify({'Updated PRODUCT in cart': cart_item.to_dict()}), 200
-=======
+
     return jsonify(cart_item.to_dict()), 200
 
 @shop_views.route('/checkout', methods=['GET'])
@@ -278,4 +244,3 @@ def order_history():
     
     orders = [p.to_dict() for key, p in orders.items()]
     return jsonify({'Orders': orders}), 200
->>>>>>> b3c69bca5c59c6b9336449ca495b4708c3f79329

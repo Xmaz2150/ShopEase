@@ -37,11 +37,7 @@ class Cart(BaseModel, Base):
     __tablename__ = 'carts'
     
     user_id = Column(String(SHORT_SHORT_TEXT), ForeignKey('users.id'), nullable=False)
-<<<<<<< HEAD
-    items = relationship('CartItem', backref='cart')
-=======
     items = relationship('CartItem', backref='cart', cascade='all, delete, delete-orphan')
->>>>>>> b3c69bca5c59c6b9336449ca495b4708c3f79329
     
     def __init__(self, *args, **kwargs):
         """Initialize OrderItem with given arguments"""
@@ -67,11 +63,7 @@ class Order(BaseModel, Base):
     order_date = Column(String(SHORT_TEXT), nullable=False)
     total_price = Column(Float, nullable=False)
 
-<<<<<<< HEAD
-    items = relationship('OrderItem', backref='order')
-=======
     items = relationship('OrderItem', backref='order', cascade='all, delete, delete-orphan')
->>>>>>> b3c69bca5c59c6b9336449ca495b4708c3f79329
 
     def __init__(self, *args, **kwargs):
         """Initialize OrderItem with given arguments"""
@@ -126,7 +118,6 @@ class Review(BaseModel, Base):
     product_id = Column(String(SHORT_SHORT_TEXT), ForeignKey('products.id'), nullable=False)
     user_id = Column(String(SHORT_SHORT_TEXT), ForeignKey('users.id'), nullable=False)
 
-    # Test Text
     review_text = Column(Text, nullable=False)
     rating = Column(Integer, nullable=False)
     review_date = Column(String(SHORT_TEXT), nullable=False)
